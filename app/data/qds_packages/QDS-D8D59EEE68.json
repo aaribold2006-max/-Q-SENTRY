@@ -1,0 +1,41 @@
+{
+    "package_id": "QDS-D8D59EEE68",
+    "protocol_id": "TQDS-PROTOTYPE-01",
+    "signer_id": "ragav",
+    "document_id": "DOC-0B6E98CC04",
+    "package_name": "ragav employee",
+    "document_binding": {
+        "document_id": "DOC-0B6E98CC04",
+        "binding_algorithm": "SHA256",
+        "document_digest": "e2b3dc6453a56c00bf2c7f9e8ba45165674d831b11c9e1d507c37b93ff4621d8",
+        "document_size_bytes": 18895,
+        "created_at": "2026-09-22T05:42:14.986939+00:00"
+    },
+    "signature_data": {
+        "protocol_id": "TQDS-PROTOTYPE-01",
+        "signer_id": "ragav",
+        "message_digest": "9014ca22ab30ec4a4966760a3038fada1cff7351c5bc11f72a65396270982865",
+        "signature_digest": "9c937bc4fadbedfd2fe7292dba6148ed2b9904a2dffb9c077d2d210db8914a10",
+        "state_labels": [
+            "|->",
+            "|0>",
+            "|->",
+            "|->",
+            "|1>",
+            "|-i>",
+            "|0>",
+            "|+i>"
+        ]
+    },
+    "verification_data": {
+        "binding_type": "PROTOTYPE_MESSAGE_BINDING",
+        "measurement_framework": "Pauli eigenstate / projective measurement prototype",
+        "teleportation_framework": "Bell/EPR entanglement + teleportation prototype"
+    },
+    "created_at": "2026-09-22T05:41:13.374669+00:00",
+    "version": "1.0",
+    "metadata": {
+        "stage": "DOCUMENT_SIGNED",
+        "initialization": {}
+    }
+}

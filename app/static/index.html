@@ -1,0 +1,3507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q-SENTRY | Quantum Digital Signature Security</title>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+            line-height: 1.45;
+        }
+
+        .header {
+            background: #111827;
+            color: #fff;
+            padding: 20px 34px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 4px solid #2563eb;
+        }
+
+        .brand { display: flex; align-items: center; gap: 14px; }
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 800;
+        }
+        .brand h1 { font-size: 27px; letter-spacing: 1px; }
+        .brand p { color: #aeb8ca; font-size: 13px; margin-top: 2px; }
+
+        .status {
+            background: #16351f;
+            color: #6ee7a0;
+            padding: 8px 13px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: 28px auto;
+            padding: 0 20px 40px;
+        }
+
+        .hero { margin-bottom: 24px; }
+        .hero h2 { font-size: 29px; margin-bottom: 6px; }
+        .hero p { color: #64748b; font-size: 14px; }
+
+        .section {
+            margin-top: 22px;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
+        }
+
+        .section h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .section-description {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .step-label {
+            color: #2563eb;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.1px;
+            margin-bottom: 8px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .card h3 {
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 6px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            background: #fff;
+            color: #172033;
+            font-size: 14px;
+            margin-bottom: 13px;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 9px;
+            padding: 12px 15px;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            transition: .15s ease;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: #fff;
+            width: 100%;
+        }
+
+        .btn-primary:hover { background: #1d4ed8; }
+
+        .btn-secondary {
+            background: #e8eef8;
+            color: #1e3a8a;
+        }
+
+        .btn-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .btn-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
+
+        .message {
+            display: none;
+            margin-top: 13px;
+            padding: 12px 14px;
+            border-radius: 9px;
+            font-size: 13px;
+        }
+
+        .message.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .message.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .hint {
+            background: #eff6ff;
+            color: #334155;
+            border-left: 4px solid #2563eb;
+            padding: 12px;
+            border-radius: 7px;
+            font-size: 12px;
+            margin-top: 7px;
+        }
+
+
+        /* Signature pad */
+        .signature-pad-wrap {
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            background: #fff;
+            padding: 8px;
+            margin-bottom: 9px;
+        }
+
+        #signatureCanvas {
+            display: block;
+            width: 100%;
+            height: 150px;
+            background: #fff;
+            border-radius: 7px;
+            cursor: crosshair;
+            touch-action: none;
+        }
+
+        .signature-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .signature-status {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        .signature-status.ready {
+            color: #166534;
+            font-weight: 700;
+        }
+
+        /* Template selection */
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            margin-bottom: 13px;
+        }
+
+        .template-card {
+            border: 1px solid #dbe4ef;
+            background: #fff;
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .template-card:hover {
+            border-color: #93c5fd;
+            background: #f8fbff;
+        }
+
+        .template-card.selected {
+            border: 2px solid #2563eb;
+            background: #eff6ff;
+        }
+
+        .template-title {
+            font-weight: 800;
+            font-size: 12px;
+            color: #172033;
+            margin-bottom: 8px;
+        }
+
+        .template-preview {
+            height: 110px;
+            border: 1px solid #e5e7eb;
+            border-radius: 7px;
+            background: #fff;
+            padding: 8px;
+            overflow: hidden;
+        }
+
+        .template-preview .tp-head {
+            text-align: center;
+            font-size: 8px;
+            font-weight: 800;
+            color: #1e293b;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 4px;
+            margin-bottom: 7px;
+        }
+
+        .template-preview .tp-line {
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+
+        .template-preview .tp-line.short {
+            width: 55%;
+        }
+
+        .template-preview .tp-line.mid {
+            width: 75%;
+        }
+
+        .template-preview .tp-box {
+            border: 1px solid #cbd5e1;
+            border-radius: 5px;
+            height: 28px;
+            margin: 6px 0;
+        }
+
+        .template-preview .tp-sign {
+            font-family: 'Brush Script MT', 'Segoe Script', cursive;
+            font-size: 13px;
+            color: #334155;
+            margin-top: 8px;
+        }
+
+        .selected-template {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 9px 10px;
+            font-size: 11px;
+            margin-bottom: 10px;
+        }
+
+        /* Document selection */
+        .document-list {
+            display: grid;
+            gap: 9px;
+            max-height: 360px;
+            overflow-y: auto;
+        }
+
+        .document-option {
+            width: 100%;
+            border: 1px solid #dbe4ef;
+            background: #fff;
+            border-radius: 10px;
+            padding: 12px 13px;
+            text-align: left;
+            cursor: pointer;
+            display: grid;
+            grid-template-columns: 22px 1fr;
+            gap: 10px;
+            align-items: start;
+        }
+
+        .document-option:hover {
+            border-color: #93c5fd;
+            background: #f8fbff;
+        }
+
+        .document-option.selected {
+            border: 2px solid #2563eb;
+            background: #eff6ff;
+        }
+
+        .radio-dot {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #94a3b8;
+            border-radius: 50%;
+            margin-top: 2px;
+            position: relative;
+        }
+
+        .document-option.selected .radio-dot {
+            border-color: #2563eb;
+        }
+
+        .document-option.selected .radio-dot::after {
+            content: "";
+            position: absolute;
+            inset: 3px;
+            border-radius: 50%;
+            background: #2563eb;
+        }
+
+        .doc-name {
+            font-weight: 800;
+            font-size: 14px;
+            color: #172033;
+        }
+
+        .doc-meta {
+            margin-top: 3px;
+            font-size: 11px;
+            color: #64748b;
+            word-break: break-word;
+        }
+
+        .empty {
+            border: 1px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 18px;
+            color: #64748b;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .selected-doc {
+            margin-top: 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 9px;
+            padding: 12px;
+            font-size: 13px;
+        }
+
+        .selected-doc strong { color: #1e3a8a; }
+
+        /* Management rows */
+        .management-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .management-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            align-items: center;
+            padding: 13px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #fff;
+        }
+
+        .management-info {
+            min-width: 0;
+        }
+
+        .management-info strong {
+            display: block;
+            font-size: 14px;
+            word-break: break-word;
+        }
+
+        .management-info span {
+            display: block;
+            color: #64748b;
+            font-size: 11px;
+            margin-top: 3px;
+            word-break: break-word;
+        }
+
+        .management-actions {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .management-actions .btn {
+            padding: 8px 11px;
+            font-size: 12px;
+        }
+
+        /* QDS */
+        .package-card {
+            border: 1px solid #dbe4ef;
+            border-radius: 10px;
+            padding: 13px;
+            margin-bottom: 9px;
+            cursor: pointer;
+            background: #fff;
+        }
+
+        .package-card.selected {
+            border: 2px solid #2563eb;
+            background: #eff6ff;
+        }
+
+        .package-card strong { display: block; font-size: 14px; }
+        .package-card span { color: #64748b; font-size: 11px; display: block; margin-top: 3px; }
+
+        .package-actions {
+            margin-top: 9px;
+            display: flex;
+            gap: 7px;
+        }
+
+        .package-actions .btn {
+            padding: 7px 10px;
+            font-size: 11px;
+        }
+
+        /* Attack cards */
+        .attack-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 13px;
+        }
+
+        .attack-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+            background: #fff;
+        }
+
+        .attack-card h4 {
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .attack-card p {
+            color: #64748b;
+            font-size: 12px;
+            min-height: 55px;
+            margin-bottom: 11px;
+        }
+
+        .attack-card .btn { width: 100%; }
+
+        .attack-target {
+            margin-bottom: 18px;
+            border: 2px solid #dbeafe;
+            background: #f8fbff;
+            border-radius: 12px;
+            padding: 17px;
+        }
+
+        .attack-target h3 { font-size: 16px; margin-bottom: 5px; }
+        .attack-target p { color: #64748b; font-size: 12px; margin-bottom: 12px; }
+
+        .attack-target-grid {
+            display: grid;
+            grid-template-columns: minmax(260px, 1fr) minmax(240px, 1fr);
+            gap: 12px;
+            align-items: end;
+        }
+
+        .attack-target select { margin-bottom: 0; }
+
+        .attack-target-info {
+            min-height: 46px;
+            background: #fff;
+            border: 1px solid #dbe4ef;
+            border-radius: 9px;
+            padding: 9px 11px;
+            font-size: 12px;
+            color: #475569;
+        }
+
+        .attack-target-info strong {
+            color: #1e3a8a;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .attack-target-status {
+            margin-top: 9px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .attack-target-status.ready { color: #166534; }
+        .attack-target-status.warning { color: #92400e; }
+
+        /* Simulation */
+        .simulation-grid {
+            display: grid;
+            grid-template-columns: 330px 1fr;
+            gap: 20px;
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .result-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 11px;
+            padding: 17px;
+            background: #fff;
+        }
+
+        .result-card.full { grid-column: 1 / -1; }
+
+        .result-card h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 11px;
+            margin-bottom: 13px;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 9px 0;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 13px;
+        }
+
+        .metric:last-child { border-bottom: 0; }
+
+        .metric-label { color: #64748b; }
+        .metric-value { font-weight: 800; }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 9px;
+            border-radius: 7px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .badge.normal { background: #dcfce7; color: #166534; }
+        .badge.anomalous { background: #fee2e2; color: #991b1b; }
+        .badge.neutral { background: #e2e8f0; color: #334155; }
+
+        .bar-row { margin: 12px 0; }
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #475569;
+            margin-bottom: 4px;
+        }
+        .bar-container {
+            height: 9px;
+            background: #e2e8f0;
+            border-radius: 9px;
+            overflow: hidden;
+        }
+        .bar {
+            height: 100%;
+            width: 0;
+            background: #2563eb;
+            transition: width .35s ease;
+        }
+
+        .evidence-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .evidence-item {
+            background: #111827;
+            color: #fff;
+            border-radius: 9px;
+            padding: 13px;
+        }
+
+        .evidence-item span {
+            display: block;
+            color: #9ca3af;
+            font-size: 10px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .evidence-item strong { font-size: 15px; }
+
+        .interpretation {
+            margin-top: 12px;
+            background: #eff6ff;
+            border-radius: 12px;
+            padding: 20px;
+            font-size: 16px;
+            line-height: 1.7;
+            color: #1f2937;
+            min-height: 150px;
+            white-space: pre-line;
+        }
+
+        .flow {
+            margin-top: 22px;
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+        }
+
+        .flow h3 { margin-bottom: 15px; font-size: 17px; }
+
+        .flow-items {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .flow-item {
+            flex: 1;
+            text-align: center;
+            padding: 11px 6px;
+            background: #eff6ff;
+            color: #1e40af;
+            border-radius: 9px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .arrow { color: #64748b; font-size: 16px; }
+
+        .footer {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 11px;
+            padding: 25px 10px 5px;
+        }
+
+        .loading {
+            display: none;
+            color: #2563eb;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        .attack-case {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 14px;
+            border-radius: 10px;
+            margin-top: 14px;
+        }
+
+        .attack-case strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .small {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 980px) {
+            .grid-2,
+            .simulation-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .attack-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .header {
+                padding: 18px 18px;
+                align-items: flex-start;
+            }
+
+            .header .status { display: none; }
+
+            .container { padding: 0 12px 30px; }
+
+            .section { padding: 17px; }
+
+            .attack-grid,
+            .results,
+            .evidence-grid,
+            .attack-target-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .result-card.full { grid-column: auto; }
+
+            .management-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .management-actions { justify-content: flex-start; }
+
+            .flow-items {
+                flex-direction: column;
+            }
+
+            .arrow { transform: rotate(90deg); }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="brand">
+        <div class="logo">Q</div>
+        <div>
+            <h1>Q-SENTRY</h1>
+            <p>Quantum Digital Signature Security Testing Framework</p>
+        </div>
+    </div>
+    <div class="status">● SYSTEM ONLINE</div>
+</header>
+
+<main class="container">
+
+    <div class="hero">
+        <h2>Security Testing Dashboard</h2>
+        <p>
+            Create QDS-signed documents, manage saved data, test defined attack scenarios,
+            and evaluate quantum measurement behaviour.
+        </p>
+    </div>
+
+    <!-- =========================================================
+         SIGNATURE GENERATION
+         ========================================================= -->
+    <section class="section">
+        <div class="step-label">MODULE 1 — SIGNATURE GENERATION</div>
+        <h2>Create QDS-Signed Document</h2>
+        <p class="section-description">
+            Create a fictional document, save it with a recognizable name, then bind it to a QDS package.
+        </p>
+
+        <div class="grid-2">
+
+            <!-- STEP 1 -->
+            <div class="card">
+                <div class="step-label">STEP 1 — CREATE QDS PACKAGE</div>
+
+                <label for="qdsProtocol">QDS Protocol</label>
+                <select id="qdsProtocol"></select>
+
+                <label for="qdsSigner">Signer Name</label>
+                <input id="qdsSigner" type="text" placeholder="e.g. Karthi">
+
+                <label for="packageName">QDS Package Name</label>
+                <input id="packageName" type="text" placeholder="e.g. Karthi Achievement QDS">
+
+                <label>Draw Your Signature</label>
+
+                <div class="signature-pad-wrap">
+                    <canvas id="signatureCanvas" aria-label="Signature drawing area"></canvas>
+
+                    <div class="signature-actions">
+                        <span id="signatureStatus" class="signature-status">Draw your signature using mouse, touch, or stylus.</span>
+                        <button type="button" class="btn secondary" id="clearSignatureBtn">Clear</button>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" id="createPackageBtn">
+                    Create &amp; Save QDS Package
+                </button>
+
+                <div id="packageMessage" class="message"></div>
+                <div id="packageLoading" class="loading">Creating QDS package...</div>
+
+                <div class="hint">
+                    This signature belongs to the signer. It will be used when the saved document is created.
+                </div>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="card">
+                <div class="step-label">STEP 2 — CREATE DOCUMENT</div>
+
+                <label>Choose Document Template</label>
+
+                <div id="templateGrid" class="template-grid">
+                    <div class="empty">Loading document templates...</div>
+                </div>
+
+                <div id="selectedTemplateInfo" class="selected-template">
+                    <strong>Selected template:</strong> None
+                </div>
+
+                <label for="documentName">Document Name</label>
+                <input id="documentName" type="text" placeholder="e.g. Karthi Achievement Certificate">
+
+                <button class="btn btn-primary" id="createDocumentBtn">
+                    Create &amp; Save Document
+                </button>
+
+                <div id="documentMessage" class="message"></div>
+                <div id="documentLoading" class="loading">Creating document...</div>
+
+                <div class="hint">
+                    Select the visual template you want, then give the saved document a recognizable name.
+                </div>
+            </div>
+
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="card" style="margin-top:20px;">
+            <div class="step-label">STEP 3 — BIND &amp; SIGN</div>
+
+            <h3>Select Saved Document</h3>
+
+            <div id="savedDocumentPicker" class="document-list">
+                <div class="empty">Loading saved documents...</div>
+            </div>
+
+            <div id="selectedDocumentInfo" class="selected-doc">
+                <strong>Selected document:</strong> None
+            </div>
+
+            <button class="btn btn-primary" id="signDocumentBtn" style="margin-top:12px;">
+                Create QDS-Signed Document
+            </button>
+
+            <div id="signMessage" class="message"></div>
+            <div id="signLoading" class="loading">Binding document to QDS package...</div>
+        </div>
+
+        <!-- SAVED DOCUMENTS MANAGEMENT -->
+        <div class="card" style="margin-top:20px;">
+            <div class="step-label">SAVED DOCUMENTS</div>
+            <h3>Document Library</h3>
+
+            <div id="documentManagementList" class="management-list">
+                <div class="empty">Loading saved documents...</div>
+            </div>
+
+            <div class="hint">
+                Rename changes only the friendly display name.
+                The permanent document ID does not change.
+            </div>
+        </div>
+
+        <!-- SAVED QDS PACKAGE MANAGEMENT -->
+        <div class="card" style="margin-top:20px;">
+            <div class="step-label">SAVED QDS PACKAGES</div>
+            <h3>QDS Package Library</h3>
+
+            <div id="packageManagementList" class="management-list">
+                <div class="empty">Loading QDS packages...</div>
+            </div>
+
+            <div class="hint">
+                Package names are for recognition. Q-SENTRY keeps the permanent package ID for references.
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         DETECTION
+         ========================================================= -->
+    <section class="section">
+        <div class="step-label">MODULE 2 — DETECTION</div>
+        <h2>Document &amp; QDS Verification</h2>
+        <p class="section-description">
+            Select a saved QDS package and a saved document. Q-SENTRY checks the document binding
+            and then performs protocol verification.
+        </p>
+
+        <div class="grid-2">
+
+            <div class="card">
+                <h3>QDS Data</h3>
+
+                <div id="detectionPackageList">
+                    <div class="empty">Loading QDS packages...</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Document</h3>
+
+                <div id="detectionDocumentPicker" class="document-list">
+                    <div class="empty">Loading saved documents...</div>
+                </div>
+
+                <div id="detectionSelectionInfo" class="selected-doc">
+                    <strong>Selected document:</strong> None
+                </div>
+
+                <button class="btn btn-primary" id="verifyBtn" style="margin-top:12px;">
+                    Run Detection
+                </button>
+
+                <div id="verificationMessage" class="message"></div>
+                <div id="verificationLoading" class="loading">Running detection...</div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top:20px;">
+            <h3>Verification Result</h3>
+
+            <div class="results">
+                <div class="result-card">
+                    <h3 id="verificationStatus">—</h3>
+                    <div class="subtitle">Security decision</div>
+                    <div class="metric">
+                        <span class="metric-label">Result</span>
+                        <span class="metric-value" id="verificationResultText">—</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Document Binding</span>
+                        <span class="metric-value" id="verificationBindingText">—</span>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <h3>Explanation</h3>
+                    <div id="verificationExplanation" class="interpretation">
+                        No detection has been run yet.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         ATTACK LAB
+         ========================================================= -->
+    <section class="section">
+        <div class="step-label">MODULE 3 — ATTACK &amp; MODIFICATION LAB</div>
+        <h2>Generate Detection-Ready Attack Cases</h2>
+        <p class="section-description">
+            The Attack Lab creates a controlled attack case from a legitimate saved document/QDS package.
+            Detection evaluates the resulting case.
+        </p>
+
+        <div class="attack-target">
+            <h3>Select QDS Package for Attack Testing</h3>
+            <p>Choose this once. Every attack button below will use the same saved QDS package and its already-bound document.</p>
+
+            <div class="attack-target-grid">
+                <div>
+                    <label for="attackPackageSelector">QDS Package</label>
+                    <select id="attackPackageSelector">
+                        <option value="">Select a saved QDS package...</option>
+                    </select>
+                </div>
+
+                <div id="attackTargetInfo" class="attack-target-info">
+                    <strong>No attack package selected</strong>
+                    Select a saved QDS package above. No new QDS package, document, or binding will be created when attacks are generated.
+                </div>
+            </div>
+
+            <div id="attackTargetStatus" class="attack-target-status warning">Select a bound QDS package to enable attack creation.</div>
+        </div>
+
+        <div class="attack-grid">
+
+            <div class="attack-card">
+                <h4>Document Tampering</h4>
+                <p>Creates a modified document while retaining the original QDS binding.</p>
+                <button class="btn btn-secondary attack-btn" data-type="tampering">
+                    Create Tampered Document
+                </button>
+            </div>
+
+            <div class="attack-card">
+                <h4>Forgery</h4>
+                <p>Creates a copied attack case with altered QDS signature data.</p>
+                <button class="btn btn-secondary attack-btn" data-type="forgery">
+                    Create Forgery Case
+                </button>
+            </div>
+
+            <div class="attack-card">
+                <h4>Impersonation</h4>
+                <p>Creates an attack case with altered signer identity context.</p>
+                <button class="btn btn-secondary attack-btn" data-type="impersonation">
+                    Create Impersonation
+                </button>
+            </div>
+
+            <div class="attack-card">
+                <h4>Replay</h4>
+                <p>Reuses a previously valid QDS package in a different verification context.</p>
+                <button class="btn btn-secondary attack-btn" data-type="replay">
+                    Create Replay Case
+                </button>
+            </div>
+
+            <div class="attack-card">
+                <h4>Unauthorized Verification</h4>
+                <p>Creates a verification case with an altered verifier context.</p>
+                <button class="btn btn-secondary attack-btn" data-type="unauthorized">
+                    Create Unauthorized Case
+                </button>
+            </div>
+
+            <div class="attack-card">
+                <h4>Quantum Channel Manipulation</h4>
+                <p>Creates a quantum attack test case for the simulation engine.</p>
+                <button class="btn btn-secondary attack-btn" data-type="channel">
+                    Create Channel Case
+                </button>
+            </div>
+        </div>
+
+        <div id="attackMessage" class="message"></div>
+        <div id="attackLoading" class="loading">Creating attack case...</div>
+
+        <div id="latestAttackCase" class="attack-case hidden">
+            <strong>Latest Attack Case</strong>
+            <div id="latestAttackText" class="small"></div>
+
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
+                <button class="btn btn-secondary" id="viewAttackDocumentBtn">
+                    View Attacked Document
+                </button>
+                <button class="btn btn-primary" id="detectAttackBtn">
+                    Run Detection
+                </button>
+                <button class="btn btn-danger" id="deleteLatestAttackBtn">
+                    Delete Attack Case
+                </button>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top:20px;">
+            <div class="step-label">SAVED ATTACK CASES</div>
+            <h3>Attack Case Library</h3>
+            <div id="attackCaseList">
+                <div class="empty">Loading attack cases...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         SIMULATION
+         ========================================================= -->
+    <section class="section">
+        <div class="step-label">MODULE 4 — SIMULATION</div>
+        <h2>Quantum Experiment Lab</h2>
+        <p class="section-description">
+            Run controlled normal, noise, attack, or attack-plus-noise experiments and inspect
+            the statistical evidence used for the security decision.
+        </p>
+
+        <div class="simulation-grid">
+
+            <div class="card">
+                <h3>Experiment Configuration</h3>
+
+                <label for="simScenario">Scenario</label>
+                <select id="simScenario">
+                    <option value="NORMAL">Normal</option>
+                    <option value="NOISE">Controlled Noise</option>
+                    <option value="ATTACK">Defined Attack</option>
+                    <option value="ATTACK_WITH_NOISE">Attack + Noise</option>
+                </select>
+
+                <label for="simBasis">Measurement Basis</label>
+                <select id="simBasis">
+                    <option value="X">X Basis</option>
+                    <option value="Y">Y Basis</option>
+                    <option value="Z">Z Basis</option>
+                </select>
+
+                <label for="simAttack">Attack Type</label>
+                <select id="simAttack">
+                    <option value="Z">Z Pauli Attack</option>
+                    <option value="X">X Pauli Attack</option>
+                </select>
+
+                <label for="simNoise">Noise Model</label>
+                <select id="simNoise">
+                    <option value="PHASE_FLIP">Phase Flip</option>
+                    <option value="BIT_FLIP">Bit Flip</option>
+                    <option value="DEPOLARIZING">Depolarizing</option>
+                </select>
+
+                <label for="simNoiseProbability">Noise Probability</label>
+                <input id="simNoiseProbability" type="number"
+                       value="0.05" min="0" max="1" step="0.01">
+
+                <label for="simShots">Measurement Shots</label>
+                <input id="simShots" type="number"
+                       value="1000" min="100" step="100">
+
+                <label for="simThreshold">Candidate Threshold</label>
+                <input id="simThreshold" type="number"
+                       value="0.058" min="0" max="1" step="0.001">
+
+                <button class="btn btn-primary" id="runSimulationBtn">
+                    Run Security Simulation
+                </button>
+
+                <div id="simulationMessage" class="message"></div>
+                <div id="simulationLoading" class="loading">
+                    Running quantum security simulation...
+                </div>
+
+                <div class="hint">
+                    An anomalous result means statistical deviation from the expected behaviour.
+                    It does not automatically prove a specific attack.
+                </div>
+            </div>
+
+            <div class="results">
+
+                <div class="result-card">
+                    <h3>Normal / Reference</h3>
+                    <div class="subtitle">Measured behaviour</div>
+
+                    <div class="metric">
+                        <span class="metric-label">TVD</span>
+                        <span id="simNormalTvd" class="metric-value">—</span>
+                    </div>
+
+                    <div class="metric">
+                        <span class="metric-label">Security Decision</span>
+                        <span id="simNormalStatus" class="badge neutral">—</span>
+                    </div>
+
+                    <div class="bar-row">
+                        <div class="bar-label">
+                            <span>+</span>
+                            <span id="simNormalPlusText">0%</span>
+                        </div>
+                        <div class="bar-container">
+                            <div id="simNormalPlusBar" class="bar"></div>
+                        </div>
+                    </div>
+
+                    <div class="bar-row">
+                        <div class="bar-label">
+                            <span>-</span>
+                            <span id="simNormalMinusText">0%</span>
+                        </div>
+                        <div class="bar-container">
+                            <div id="simNormalMinusBar" class="bar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <h3 id="simAttackTitle">Attack / Test</h3>
+                    <div class="subtitle">Defined experimental condition</div>
+
+                    <div class="metric">
+                        <span class="metric-label">TVD</span>
+                        <span id="simAttackTvd" class="metric-value">—</span>
+                    </div>
+
+                    <div class="metric">
+                        <span class="metric-label">Security Decision</span>
+                        <span id="simAttackStatus" class="badge neutral">—</span>
+                    </div>
+
+                    <div class="bar-row">
+                        <div class="bar-label">
+                            <span>+</span>
+                            <span id="simAttackPlusText">0%</span>
+                        </div>
+                        <div class="bar-container">
+                            <div id="simAttackPlusBar" class="bar"></div>
+                        </div>
+                    </div>
+
+                    <div class="bar-row">
+                        <div class="bar-label">
+                            <span>-</span>
+                            <span id="simAttackMinusText">0%</span>
+                        </div>
+                        <div class="bar-container">
+                            <div id="simAttackMinusBar" class="bar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-card full">
+                    <h3>Q-SENTRY Security Evidence</h3>
+
+                    <div class="evidence-grid">
+                        <div class="evidence-item">
+                            <span>Threshold</span>
+                            <strong id="simEvidenceThreshold">—</strong>
+                        </div>
+
+                        <div class="evidence-item">
+                            <span>Normal Behaviour</span>
+                            <strong id="simEvidenceNormal">—</strong>
+                        </div>
+
+                        <div class="evidence-item">
+                            <span>Attack Behaviour</span>
+                            <strong id="simEvidenceAttack">—</strong>
+                        </div>
+                    </div>
+
+                    <div id="simInterpretation" class="interpretation">
+                        Run a simulation to generate security evidence.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECURITY CHAIN -->
+    <div class="flow">
+        <h3>The Q-SENTRY Security-Intelligence Chain</h3>
+
+        <div class="flow-items">
+            <div class="flow-item">Expected<br>Behaviour</div>
+            <div class="arrow">→</div>
+            <div class="flow-item">Observed<br>Measurement</div>
+            <div class="arrow">→</div>
+            <div class="flow-item">Statistical<br>Deviation</div>
+            <div class="arrow">→</div>
+            <div class="flow-item">Threshold<br>Analysis</div>
+            <div class="arrow">→</div>
+            <div class="flow-item">Security<br>Decision</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Q-SENTRY — Research-Grounded Quantum Digital Signature Security Prototype
+    </div>
+
+</main>
+
+<script>
+    let documents = [];
+    let packages = [];
+    let attackCases = [];
+
+    let selectedDocumentId = null;
+    let selectedDetectionDocumentId = null;
+
+    // Module 1 + Module 3 package selection.
+    let selectedPackageId = null;
+
+    // Module 2 has its own independent selections so package/document
+    // selection order cannot affect detection.
+    let selectedDetectionPackageId = null;
+
+    // Module 3 keeps one shared attack target. Select it once, then create
+    // any number of attack cases from the same saved QDS package.
+    let selectedAttackPackageId = null;
+
+    let latestAttackCaseId = null;
+    let latestAttackCase = null;
+
+    const $ = (id) => document.getElementById(id);
+
+    function showMessage(id, text, type = "success") {
+        const el = $(id);
+        el.textContent = text;
+        el.className = "message " + type;
+    }
+
+    function clearMessage(id) {
+        const el = $(id);
+        el.textContent = "";
+        el.className = "message";
+    }
+
+    function setLoading(id, visible) {
+        $(id).style.display = visible ? "block" : "none";
+    }
+
+    async function api(url, options = {}) {
+        const response = await fetch(url, options);
+        const text = await response.text();
+
+        let data = {};
+        try {
+            data = text ? JSON.parse(text) : {};
+        } catch {
+            data = { detail: text || "Server returned an invalid response." };
+        }
+
+        if (!response.ok) {
+            let message = "Request failed (" + response.status + " ).";
+
+            if (Array.isArray(data.detail)) {
+                message = data.detail.map(item => {
+                    const location = Array.isArray(item.loc)
+                        ? item.loc.join(" → ")
+                        : "request";
+                    return `${location}: ${item.msg || "Invalid value"}`;
+                }).join(" | ");
+            } else if (typeof data.detail === "string") {
+                message = data.detail;
+            } else if (data.message) {
+                message = String(data.message);
+            }
+
+            throw new Error(message);
+        }
+
+        return data;
+    }
+
+    function jsonOptions(method, body) {
+        return {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        };
+    }
+
+    function valueFrom(obj, keys, fallback = "") {
+        for (const key of keys) {
+            if (
+                obj &&
+                obj[key] !== undefined &&
+                obj[key] !== null &&
+                obj[key] !== ""
+            ) return obj[key];
+        }
+        return fallback;
+    }
+
+    function normalizeDocuments(data) {
+        const arr =
+            Array.isArray(data) ? data :
+            Array.isArray(data.documents) ? data.documents :
+            Array.isArray(data.items) ? data.items :
+            [];
+
+        return arr.map(d => ({
+            document_id: valueFrom(d, ["document_id", "id"]),
+            document_name: valueFrom(
+                d,
+                ["document_name", "name", "friendly_name", "title"],
+                ""
+            ),
+            filename: valueFrom(d, ["filename", "file_name"], ""),
+            template: valueFrom(
+                d,
+                ["template", "template_name", "document_template"],
+                ""
+            ),
+            signer_name: valueFrom(
+                d,
+                ["signer_name", "signer_id", "signer"],
+                ""
+            )
+        })).filter(d => d.document_id);
+    }
+
+    function normalizePackages(data) {
+        const arr =
+            Array.isArray(data) ? data :
+            Array.isArray(data.packages) ? data.packages :
+            Array.isArray(data.items) ? data.items :
+            [];
+
+        return arr.map(p => ({
+            package_id: valueFrom(p, ["package_id", "id"]),
+            package_name: valueFrom(
+                p,
+                ["package_name", "name", "friendly_name", "title"],
+                ""
+            ),
+            signer_id: valueFrom(p, ["signer_id", "signer_name", "signer"], ""),
+            protocol_id: valueFrom(p, ["protocol_id", "protocol"], ""),
+            document_id: valueFrom(p, ["document_id"], ""),
+            version: valueFrom(p, ["version"], "")
+        })).filter(p => p.package_id);
+    }
+
+    function normalizeAttackCases(data) {
+        const arr =
+            Array.isArray(data) ? data :
+            Array.isArray(data.attack_cases) ? data.attack_cases :
+            Array.isArray(data.items) ? data.items :
+            [];
+
+        return arr.map(a => ({
+            scenario_id: valueFrom(a, ["scenario_id", "attack_case_id", "id"]),
+            attack_type: valueFrom(a, ["attack_type", "scenario_type", "type"], "Unknown"),
+            original_document_id: valueFrom(a, ["original_document_id"], ""),
+            attack_document_id: valueFrom(a, ["attack_document_id"], ""),
+            detection_ready: valueFrom(a, ["detection_ready"], false),
+            created_at: valueFrom(a, ["created_at", "timestamp"], "")
+        })).filter(a => a.scenario_id);
+    }
+
+    function documentDisplayName(doc) {
+        if (doc.document_name) return doc.document_name;
+
+        if (doc.template && doc.signer_name) {
+            return doc.signer_name + " — " + doc.template;
+        }
+
+        return "Unnamed Document";
+    }
+
+    function packageDisplayName(pkg) {
+        if (pkg.package_name) return pkg.package_name;
+
+        if (pkg.signer_id) {
+            return pkg.signer_id + " QDS Package";
+        }
+
+        return "Unnamed QDS Package";
+    }
+
+    function renderDocumentPicker() {
+        const container = $("savedDocumentPicker");
+
+        if (!documents.length) {
+            container.innerHTML =
+                '<div class="empty">No saved documents yet. Create one above.</div>';
+            $("selectedDocumentInfo").innerHTML =
+                "<strong>Selected document:</strong> None";
+            return;
+        }
+
+        container.innerHTML = documents.map(doc => `
+            <button
+                type="button"
+                class="document-option ${doc.document_id === selectedDocumentId ? "selected" : ""}"
+                data-document-id="${escapeHtml(doc.document_id)}"
+            >
+                <span class="radio-dot"></span>
+                <span>
+                    <span class="doc-name">${escapeHtml(documentDisplayName(doc))}</span>
+                    <span class="doc-meta">
+                        ${escapeHtml(doc.template || "Document")}
+                        ${doc.signer_name ? " • Signer: " + escapeHtml(doc.signer_name) : ""}
+                        • ID: ${escapeHtml(doc.document_id)}
+                    </span>
+                </span>
+            </button>
+        `).join("");
+
+        container.querySelectorAll(".document-option").forEach(btn => {
+            btn.addEventListener("click", () => {
+                selectedDocumentId = btn.dataset.documentId;
+                renderDocumentPicker();
+            });
+        });
+
+        const selected = documents.find(d => d.document_id === selectedDocumentId);
+
+        $("selectedDocumentInfo").innerHTML = selected
+            ? `<strong>Selected document:</strong> ${escapeHtml(documentDisplayName(selected))}
+               <span class="small"> (${escapeHtml(selected.document_id)})</span>`
+            : "<strong>Selected document:</strong> None";
+    }
+
+    function renderDetectionDocumentPicker() {
+        const container = $("detectionDocumentPicker");
+
+        if (!documents.length) {
+            container.innerHTML =
+                '<div class="empty">No saved documents available.</div>';
+            $("detectionSelectionInfo").innerHTML =
+                "<strong>Selected document:</strong> None";
+            return;
+        }
+
+        container.innerHTML = documents.map(doc => `
+            <button
+                type="button"
+                class="document-option ${doc.document_id === selectedDetectionDocumentId ? "selected" : ""}"
+                data-document-id="${escapeHtml(doc.document_id)}"
+            >
+                <span class="radio-dot"></span>
+                <span>
+                    <span class="doc-name">${escapeHtml(documentDisplayName(doc))}</span>
+                    <span class="doc-meta">
+                        ${escapeHtml(doc.template || "Document")}
+                        ${doc.signer_name ? " • Signer: " + escapeHtml(doc.signer_name) : ""}
+                        • ID: ${escapeHtml(doc.document_id)}
+                    </span>
+                </span>
+            </button>
+        `).join("");
+
+        container.querySelectorAll(".document-option").forEach(btn => {
+            btn.addEventListener("click", () => {
+                selectedDetectionDocumentId = btn.dataset.documentId;
+                renderDetectionDocumentPicker();
+            });
+        });
+
+        const selected = documents.find(
+            d => d.document_id === selectedDetectionDocumentId
+        );
+
+        $("detectionSelectionInfo").innerHTML = selected
+            ? `<strong>Selected document:</strong> ${escapeHtml(documentDisplayName(selected))}
+               <span class="small"> (${escapeHtml(selected.document_id)})</span>`
+            : "<strong>Selected document:</strong> None";
+    }
+
+    function renderDocumentManagement() {
+        const container = $("documentManagementList");
+
+        if (!documents.length) {
+            container.innerHTML =
+                '<div class="empty">No saved documents.</div>';
+            return;
+        }
+
+        container.innerHTML = documents.map(doc => `
+            <div class="management-row">
+                <div class="management-info">
+                    <strong>${escapeHtml(documentDisplayName(doc))}</strong>
+                    <span>
+                        ID: ${escapeHtml(doc.document_id)}
+                        ${doc.template ? " • " + escapeHtml(doc.template) : ""}
+                        ${doc.signer_name ? " • Signer: " + escapeHtml(doc.signer_name) : ""}
+                    </span>
+                </div>
+
+                <div class="management-actions">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-rename-doc="${escapeHtml(doc.document_id)}">
+                        Rename
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-danger"
+                            data-delete-doc="${escapeHtml(doc.document_id)}">
+                        Delete
+                    </button>
+                </div>
+            </div>
+        `).join("");
+
+        container.querySelectorAll("[data-rename-doc]").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                const id = btn.dataset.renameDoc;
+                const doc = documents.find(d => d.document_id === id);
+                if (!doc) return;
+
+                const name = prompt(
+                    "Enter a new document name:",
+                    documentDisplayName(doc)
+                );
+
+                if (name === null) return;
+
+                const trimmed = name.trim();
+                if (!trimmed) {
+                    alert("Document name cannot be empty.");
+                    return;
+                }
+
+                try {
+                    await api(
+                        `/api/documents/${encodeURIComponent(id)}/rename`,
+                        jsonOptions("PUT", { document_name: trimmed })
+                    );
+
+                    await refreshDocuments();
+                    showMessage(
+                        "documentMessage",
+                        `Document renamed to "${trimmed}".`
+                    );
+                } catch (error) {
+                    showMessage("documentMessage", error.message, "error");
+                }
+            });
+        });
+
+        container.querySelectorAll("[data-delete-doc]").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                const id = btn.dataset.deleteDoc;
+                const doc = documents.find(d => d.document_id === id);
+                if (!doc) return;
+
+                if (!confirm(
+                    `Delete "${documentDisplayName(doc)}"?\n\n` +
+                    `The permanent ID ${id} will also no longer be available in this document library.`
+                )) return;
+
+                try {
+                    await api(
+                        `/api/documents/${encodeURIComponent(id)}`,
+                        { method: "DELETE" }
+                    );
+
+                    if (selectedDocumentId === id) selectedDocumentId = null;
+                    if (selectedDetectionDocumentId === id) selectedDetectionDocumentId = null;
+
+                    await refreshDocuments();
+                    showMessage(
+                        "documentMessage",
+                        "Document deleted successfully."
+                    );
+                } catch (error) {
+                    showMessage("documentMessage", error.message, "error");
+                }
+            });
+        });
+    }
+
+    function renderPackageManagement() {
+        const container = $("packageManagementList");
+
+        if (!packages.length) {
+            container.innerHTML =
+                '<div class="empty">No saved QDS packages.</div>';
+            return;
+        }
+
+        container.innerHTML = packages.map(pkg => `
+            <div class="management-row">
+                <div class="management-info">
+                    <strong>${escapeHtml(packageDisplayName(pkg))}</strong>
+                    <span>
+                        ID: ${escapeHtml(pkg.package_id)}
+                        ${pkg.signer_id ? " • Signer: " + escapeHtml(pkg.signer_id) : ""}
+                        ${pkg.document_id ? " • Document: " + escapeHtml(pkg.document_id) : ""}
+                    </span>
+                </div>
+
+                <div class="management-actions">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-rename-pkg="${escapeHtml(pkg.package_id)}">
+                        Rename
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-danger"
+                            data-delete-pkg="${escapeHtml(pkg.package_id)}">
+                        Delete
+                    </button>
+                </div>
+            </div>
+        `).join("");
+
+        container.querySelectorAll("[data-rename-pkg]").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                const id = btn.dataset.renamePkg;
+                const pkg = packages.find(p => p.package_id === id);
+                if (!pkg) return;
+
+                const name = prompt(
+                    "Enter a new QDS package name:",
+                    packageDisplayName(pkg)
+                );
+
+                if (name === null) return;
+
+                const trimmed = name.trim();
+                if (!trimmed) {
+                    alert("Package name cannot be empty.");
+                    return;
+                }
+
+                try {
+                    await api(
+                        `/api/qds/packages/${encodeURIComponent(id)}/rename`,
+                        jsonOptions("PUT", { package_name: trimmed })
+                    );
+
+                    await refreshPackages();
+                    showMessage(
+                        "packageMessage",
+                        `QDS package renamed to "${trimmed}".`
+                    );
+                } catch (error) {
+                    showMessage("packageMessage", error.message, "error");
+                }
+            });
+        });
+
+        container.querySelectorAll("[data-delete-pkg]").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                const id = btn.dataset.deletePkg;
+                const pkg = packages.find(p => p.package_id === id);
+                if (!pkg) return;
+
+                if (!confirm(
+                    `Delete "${packageDisplayName(pkg)}"?\n\n` +
+                    `Permanent package ID: ${id}`
+                )) return;
+
+                try {
+                    await api(
+                        `/api/qds/packages/${encodeURIComponent(id)}`,
+                        { method: "DELETE" }
+                    );
+
+                    if (selectedPackageId === id) selectedPackageId = null;
+                    if (selectedAttackPackageId === id) selectedAttackPackageId = null;
+
+                    await refreshPackages();
+                    showMessage(
+                        "packageMessage",
+                        "QDS package deleted successfully."
+                    );
+                } catch (error) {
+                    showMessage("packageMessage", error.message, "error");
+                }
+            });
+        });
+    }
+
+    function renderPackageDetectionList() {
+        const container = $("detectionPackageList");
+
+        if (!packages.length) {
+            container.innerHTML =
+                '<div class="empty">No saved QDS packages yet.</div>';
+            return;
+        }
+
+        container.innerHTML = packages.map(pkg => `
+            <div class="package-card ${pkg.package_id === selectedDetectionPackageId ? "selected" : ""}"
+                 data-package-id="${escapeHtml(pkg.package_id)}">
+                <strong>${escapeHtml(packageDisplayName(pkg))}</strong>
+                <span>ID: ${escapeHtml(pkg.package_id)}</span>
+                <span>
+                    ${pkg.signer_id ? "Signer: " + escapeHtml(pkg.signer_id) : ""}
+                    ${pkg.protocol_id ? " • Protocol: " + escapeHtml(pkg.protocol_id) : ""}
+                </span>
+
+                <div class="package-actions">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-select-pkg="${escapeHtml(pkg.package_id)}">
+                        Select Package
+                    </button>
+                </div>
+            </div>
+        `).join("");
+
+        container.querySelectorAll("[data-select-pkg]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                selectedDetectionPackageId = btn.dataset.selectPkg;
+                renderPackageDetectionList();
+                renderDetectionDocumentPicker();
+
+                const selectedPackage = packages.find(
+                    p => p.package_id === selectedDetectionPackageId
+                );
+
+                const boundId = selectedPackage?.document_id || null;
+                const boundDocument = documents.find(
+                    d => d.document_id === boundId
+                );
+
+                const info = $("detectionSelectionInfo");
+                const currentDocument = documents.find(
+                    d => d.document_id === selectedDetectionDocumentId
+                );
+
+                if (currentDocument) {
+                    info.innerHTML =
+                        `<strong>Selected document:</strong> ${escapeHtml(documentDisplayName(currentDocument))}
+                         <span class="small"> (${escapeHtml(currentDocument.document_id)})</span>` +
+                        (boundDocument
+                            ? `<div class="small" style="margin-top:6px;"><strong>Package bound document:</strong> ${escapeHtml(documentDisplayName(boundDocument))}
+                               (${escapeHtml(boundDocument.document_id)})</div>`
+                            : `<div class="small" style="margin-top:6px;"><strong>Package bound document:</strong> Not bound</div>`);
+                } else {
+                    info.innerHTML = boundDocument
+                        ? `<strong>Selected document:</strong> None<div class="small" style="margin-top:6px;"><strong>Package bound document:</strong> ${escapeHtml(documentDisplayName(boundDocument))}
+                           (${escapeHtml(boundDocument.document_id)})</div>`
+                        : `<strong>Selected document:</strong> None<div class="small" style="margin-top:6px;"><strong>Package bound document:</strong> Not bound</div>`;
+                }
+            });
+        });
+    }
+
+    function renderAttackPackagePicker() {
+        const selector = $("attackPackageSelector");
+        const info = $("attackTargetInfo");
+        const status = $("attackTargetStatus");
+
+        if (!selector || !info || !status) return;
+
+        selector.innerHTML = [
+            '<option value="">Select a saved QDS package...</option>',
+            ...packages.map(pkg => {
+                const bound = Boolean(pkg.document_id);
+                const label = bound
+                    ? `${packageDisplayName(pkg)} — ${pkg.package_id}`
+                    : `${packageDisplayName(pkg)} — NOT BOUND`;
+                return `<option value="${escapeHtml(pkg.package_id)}" ${pkg.package_id === selectedAttackPackageId ? "selected" : ""} ${bound ? "" : "disabled"}>${escapeHtml(label)}</option>`;
+            })
+        ].join("");
+
+        const selected = packages.find(pkg => pkg.package_id === selectedAttackPackageId);
+
+        if (!selected) {
+            info.innerHTML =
+                '<strong>No attack package selected</strong>' +
+                'Select a saved QDS package above. No new QDS package, document, or binding will be created when attacks are generated.';
+            status.textContent = "Select a bound QDS package to enable attack creation.";
+            status.className = "attack-target-status warning";
+            return;
+        }
+
+        if (!selected.document_id) {
+            info.innerHTML =
+                `<strong>${escapeHtml(packageDisplayName(selected))}</strong>` +
+                `Package ID: ${escapeHtml(selected.package_id)}<br>No document is bound to this package yet.`;
+            status.textContent = "This package is not bound to a document. Complete Step 3 — Bind & Sign first.";
+            status.className = "attack-target-status warning";
+            return;
+        }
+
+        const boundDoc = documents.find(doc => doc.document_id === selected.document_id);
+        const docName = boundDoc ? documentDisplayName(boundDoc) : selected.document_id;
+
+        info.innerHTML =
+            `<strong>${escapeHtml(packageDisplayName(selected))}</strong>` +
+            `Package ID: ${escapeHtml(selected.package_id)}<br>` +
+            `Bound document: ${escapeHtml(docName)} (${escapeHtml(selected.document_id)})`;
+
+        status.textContent = "Ready. All six attack types will use this same QDS package and bound document.";
+        status.className = "attack-target-status ready";
+    }
+
+    function renderAttackCases() {
+        const container = $("attackCaseList");
+
+        if (!attackCases.length) {
+            container.innerHTML =
+                '<div class="empty">No attack cases created yet.</div>';
+            return;
+        }
+
+        container.innerHTML = attackCases.map(a => {
+            const ready = Boolean(a.detection_ready);
+            return `
+                <div class="management-row">
+                    <div class="management-info">
+                        <strong>${escapeHtml(a.attack_type)}</strong>
+                        <span>
+                            Case ID: ${escapeHtml(a.scenario_id)}
+                            ${ready ? " • Detection-ready" : " • Not detection-ready"}
+                        </span>
+                    </div>
+
+                    <div class="management-actions">
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-view-attack="${escapeHtml(a.scenario_id)}">
+                            View Document
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-primary"
+                                data-detect-attack="${escapeHtml(a.scenario_id)}"
+                                ${ready ? "" : "disabled title=\"This attack case is not detection-ready. Create a new attack case after updating Q-SENTRY.\""}>
+                            ${ready ? "Detect" : "Not Ready"}
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-danger attack-delete-btn"
+                                data-delete-attack="${escapeHtml(a.scenario_id)}">
+                            Delete Attack Case
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join("");
+
+        container.querySelectorAll("[data-view-attack]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                viewAttackDocument(btn.dataset.viewAttack);
+            });
+        });
+
+        container.querySelectorAll("[data-detect-attack]:not([disabled])").forEach(btn => {
+            btn.addEventListener("click", () => {
+                detectAttackCase(btn.dataset.detectAttack);
+            });
+        });
+
+        container.querySelectorAll("[data-delete-attack]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                deleteAttackCase(btn.dataset.deleteAttack);
+            });
+        });
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+    async function refreshProtocols() {
+        try {
+            const data = await api("/api/protocols");
+            const protocols =
+                Array.isArray(data) ? data :
+                Array.isArray(data.protocols) ? data.protocols :
+                [];
+
+            $("qdsProtocol").innerHTML = protocols.length
+                ? protocols.map(p => {
+                    const id = valueFrom(p, ["protocol_id", "id"], "");
+                    const name = valueFrom(p, ["protocol_name", "name"], id);
+                    return `<option value="${escapeHtml(id)}">
+                        ${escapeHtml(name)}
+                    </option>`;
+                }).join("")
+                : '<option value="TQDS-PROTOTYPE-01">Teleportation-Based QDS Prototype</option>';
+        } catch (error) {
+            $("qdsProtocol").innerHTML =
+                '<option value="TQDS-PROTOTYPE-01">Teleportation-Based QDS Prototype</option>';
+        }
+    }
+
+    let selectedTemplateId = null;
+    let templateCatalog = [];
+    let signatureDataUrl = null;
+
+    function templateInfoById(templateId) {
+        return templateCatalog.find(t => t.id === templateId) || null;
+    }
+
+    function templatePreviewHtml(id) {
+        const common = `
+            <div class="tp-line short"></div>
+            <div class="tp-line mid"></div>
+        `;
+
+        switch (id) {
+            case "achievement_certificate":
+                return `
+                    <div class="tp-head">CERTIFICATE OF ACHIEVEMENT</div>
+                    ${common}
+                    <div class="tp-box"></div>
+                    <div class="tp-line"></div>
+                    <div class="tp-sign">Signature</div>
+                `;
+            case "academic_certificate":
+                return `
+                    <div class="tp-head">ACADEMIC CERTIFICATE</div>
+                    ${common}
+                    <div class="tp-line"></div>
+                    <div class="tp-line short"></div>
+                    <div class="tp-sign">Signature</div>
+                `;
+            case "employment_certificate":
+                return `
+                    <div class="tp-head">EMPLOYMENT CERTIFICATE</div>
+                    ${common}
+                    <div class="tp-line"></div>
+                    <div class="tp-line short"></div>
+                    <div class="tp-sign">Signature</div>
+                `;
+            case "official_agreement":
+                return `
+                    <div class="tp-head">OFFICIAL AGREEMENT</div>
+                    <div class="tp-line"></div>
+                    <div class="tp-line"></div>
+                    <div class="tp-box"></div>
+                    <div class="tp-sign">Signature</div>
+                `;
+            case "authorization_letter":
+                return `
+                    <div class="tp-head">AUTHORIZATION LETTER</div>
+                    ${common}
+                    <div class="tp-line"></div>
+                    <div class="tp-line short"></div>
+                    <div class="tp-sign">Signature</div>
+                `;
+            default:
+                return `
+                    <div class="tp-head">DOCUMENT</div>
+                    ${common}
+                    <div class="tp-box"></div>
+                    <div class="tp-sign">Signature</div>
+                `;
+        }
+    }
+
+    function renderTemplateCards() {
+        const container = $("templateGrid");
+
+        if (!templateCatalog.length) {
+            container.innerHTML = '<div class="empty">No document templates available.</div>';
+            $("selectedTemplateInfo").innerHTML = '<strong>Selected template:</strong> None';
+            return;
+        }
+
+        container.innerHTML = templateCatalog.map(template => `
+            <button type="button"
+                    class="template-card ${template.id === selectedTemplateId ? "selected" : ""}"
+                    data-template-id="${escapeHtml(template.id)}">
+                <div class="template-title">${escapeHtml(template.name)}</div>
+                <div class="template-preview">${templatePreviewHtml(template.id)}</div>
+            </button>
+        `).join("");
+
+        container.querySelectorAll("[data-template-id]").forEach(button => {
+            button.addEventListener("click", () => {
+                selectedTemplateId = button.dataset.templateId;
+                renderTemplateCards();
+            });
+        });
+
+        const selected = templateInfoById(selectedTemplateId);
+        $("selectedTemplateInfo").innerHTML = selected
+            ? `<strong>Selected template:</strong> ${escapeHtml(selected.name)}`
+            : '<strong>Selected template:</strong> None';
+    }
+
+    async function refreshTemplates() {
+        try {
+            const data = await api("/api/document-templates");
+
+            const templates =
+                Array.isArray(data) ? data :
+                Array.isArray(data.templates) ? data.templates :
+                [];
+
+            templateCatalog = templates.map(t => ({
+                id: valueFrom(t, ["template_id", "id", "template", "name"], ""),
+                name: valueFrom(t, ["template_name", "name", "title"], "")
+            })).filter(t => t.id);
+
+            if (!templateCatalog.length) {
+                templateCatalog = [
+                    { id: "achievement_certificate", name: "Achievement Certificate" },
+                    { id: "academic_certificate", name: "Academic Certificate" },
+                    { id: "employment_certificate", name: "Employment Certificate" },
+                    { id: "official_agreement", name: "Official Agreement" },
+                    { id: "authorization_letter", name: "Authorization Letter" }
+                ];
+            }
+
+        } catch (error) {
+            templateCatalog = [
+                { id: "achievement_certificate", name: "Achievement Certificate" },
+                { id: "academic_certificate", name: "Academic Certificate" },
+                { id: "employment_certificate", name: "Employment Certificate" },
+                { id: "official_agreement", name: "Official Agreement" },
+                { id: "authorization_letter", name: "Authorization Letter" }
+            ];
+        }
+
+        if (!selectedTemplateId && templateCatalog.length) {
+            selectedTemplateId = templateCatalog[0].id;
+        }
+
+        renderTemplateCards();
+    }
+
+    async function refreshDocuments() {
+        try {
+            const data = await api("/api/documents");
+            documents = normalizeDocuments(data);
+
+            if (
+                selectedDocumentId &&
+                !documents.some(d => d.document_id === selectedDocumentId)
+            ) selectedDocumentId = null;
+
+            if (
+                selectedDetectionDocumentId &&
+                !documents.some(d => d.document_id === selectedDetectionDocumentId)
+            ) selectedDetectionDocumentId = null;
+
+            renderDocumentPicker();
+            renderDetectionDocumentPicker();
+            renderDocumentManagement();
+        } catch (error) {
+            documents = [];
+            renderDocumentPicker();
+            renderDetectionDocumentPicker();
+            renderDocumentManagement();
+            console.error("Document refresh error:", error);
+        }
+    }
+
+    async function refreshPackages() {
+        try {
+            const data = await api("/api/qds/packages");
+            packages = normalizePackages(data);
+
+            if (
+                selectedPackageId &&
+                !packages.some(p => p.package_id === selectedPackageId)
+            ) selectedPackageId = null;
+
+            if (
+                selectedDetectionPackageId &&
+                !packages.some(p => p.package_id === selectedDetectionPackageId)
+            ) selectedDetectionPackageId = null;
+
+            if (
+                selectedAttackPackageId &&
+                !packages.some(p => p.package_id === selectedAttackPackageId)
+            ) selectedAttackPackageId = null;
+
+            renderPackageManagement();
+            renderPackageDetectionList();
+            renderAttackPackagePicker();
+        } catch (error) {
+            packages = [];
+            renderPackageManagement();
+            renderPackageDetectionList();
+            console.error("Package refresh error:", error);
+        }
+    }
+
+    async function refreshAttackCases() {
+        try {
+            const data = await api("/api/attack-cases");
+            attackCases = normalizeAttackCases(data);
+            renderAttackCases();
+        } catch (error) {
+            attackCases = [];
+            renderAttackCases();
+            console.error("Attack cases refresh error:", error);
+        }
+    }
+
+    /* =========================================================
+       BACKEND REQUEST-SCHEMA HELPERS
+       ========================================================= */
+
+    let openapiCache = null;
+
+    async function getOpenAPI() {
+        if (!openapiCache) {
+            openapiCache = await api("/openapi.json");
+        }
+        return openapiCache;
+    }
+
+    function resolveSchema(schema, openapi) {
+        if (!schema) return {};
+        if (!schema.$ref) return schema;
+
+        const parts = schema.$ref.split("/");
+        let value = openapi;
+        for (let i = 1; i < parts.length; i++) {
+            value = value?.[parts[i]];
+        }
+        return value || {};
+    }
+
+    async function getRequestSchema(path, method) {
+        try {
+            const openapi = await getOpenAPI();
+            const raw =
+                openapi?.paths?.[path]?.[method.toLowerCase()]
+                    ?.requestBody?.content?.["application/json"]?.schema;
+            return resolveSchema(raw, openapi);
+        } catch {
+            return {};
+        }
+    }
+
+    function valueForField(fieldName, context) {
+        const name = String(fieldName).toLowerCase();
+
+        if (name.includes("template")) return context.template;
+
+        if (
+            name.includes("signer") ||
+            name === "sender" ||
+            name === "owner"
+        ) return context.signer;
+
+        if (
+            name.includes("visible") &&
+            name.includes("signature")
+        ) return context.signature;
+
+        if (
+            name === "signature" ||
+            name.includes("signature_text") ||
+            name.includes("signature_data") ||
+            name.includes("drawn_signature")
+        ) return context.signature;
+
+        if (
+            name.includes("document_name") ||
+            name === "name" ||
+            name === "title"
+        ) return context.documentName;
+
+        if (name.includes("package_name")) return context.packageName;
+
+        if (name.includes("protocol")) return context.protocol;
+
+        if (name.includes("document_id")) return context.documentId;
+
+        if (name.includes("package_id")) return context.packageId;
+
+        return undefined;
+    }
+
+    async function buildPayload(path, method, context) {
+        const schema = await getRequestSchema(path, method);
+        const properties = schema.properties || {};
+        const required = schema.required || [];
+        const body = {};
+
+        for (const property of Object.keys(properties)) {
+            const value = valueForField(property, context);
+            if (value !== undefined) {
+                body[property] = value;
+            }
+        }
+
+        for (const property of required) {
+            if (body[property] === undefined) {
+                const value = valueForField(property, context);
+                if (value !== undefined) {
+                    body[property] = value;
+                }
+            }
+        }
+
+        if (Object.keys(body).length === 0) {
+            return {
+                template: context.template,
+                template_id: context.template,
+                document_template: context.template,
+                document_template_id: context.template,
+                signer_name: context.signer,
+                signer_id: context.signer,
+                signer: context.signer,
+                visible_signature: context.signature,
+                signature: context.signature,
+                signature_text: context.signature,
+                signature_data: context.signature,
+                drawn_signature: context.signature,
+                document_name: context.documentName,
+                name: context.documentName,
+                protocol_id: context.protocol,
+                package_name: context.packageName
+            };
+        }
+
+        return body;
+    }
+
+    async function createPackage() {
+        clearMessage("packageMessage");
+        setLoading("packageLoading", true);
+
+        const signer = $("qdsSigner").value.trim();
+        const packageName = $("packageName").value.trim();
+        const protocolId = $("qdsProtocol").value;
+
+        if (!signer) {
+            setLoading("packageLoading", false);
+            showMessage("packageMessage", "Enter the signer name.", "error");
+            return;
+        }
+
+        if (!signatureDataUrl) {
+            setLoading("packageLoading", false);
+            showMessage("packageMessage", "Draw the signer's signature before creating the QDS package.", "error");
+            return;
+        }
+
+        const finalName =
+            packageName ||
+            `${signer} QDS Package`;
+
+        try {
+            const payload = await buildPayload(
+                "/api/qds/packages/create",
+                "POST",
+                {
+                    protocol: protocolId,
+                    signer: signer,
+                    packageName: finalName,
+                    signature: signatureDataUrl
+                }
+            );
+
+            const data = await api(
+                "/api/qds/packages/create",
+                jsonOptions("POST", payload)
+            );
+
+            const created = valueFrom(
+                data,
+                ["package", "qds_package"],
+                null
+            );
+
+            const id = valueFrom(
+                created || data,
+                ["package_id", "id"],
+                ""
+            );
+
+            showMessage(
+                "packageMessage",
+                id
+                    ? `QDS package "${finalName}" created and saved.`
+                    : `QDS package "${finalName}" created and saved.`
+            );
+
+            $("qdsSigner").value = "";
+            $("packageName").value = "";
+
+            await refreshPackages();
+
+            if (id) {
+                selectedPackageId = id;
+                selectedAttackPackageId = id;
+            }
+            renderPackageDetectionList();
+            renderAttackPackagePicker();
+
+        } catch (error) {
+            showMessage("packageMessage", error.message, "error");
+        } finally {
+            setLoading("packageLoading", false);
+        }
+    }
+
+    async function createDocument() {
+        clearMessage("documentMessage");
+        setLoading("documentLoading", true);
+
+        const template = selectedTemplateId;
+        const enteredName = $("documentName").value.trim();
+
+        if (!template) {
+            setLoading("documentLoading", false);
+            showMessage("documentMessage", "Select a document template.", "error");
+            return;
+        }
+
+        if (!signatureDataUrl) {
+            setLoading("documentLoading", false);
+            showMessage("documentMessage", "Draw the signer's signature in Step 1 first.", "error");
+            return;
+        }
+
+        const signer = $("qdsSigner").value.trim();
+
+        if (!signer) {
+            setLoading("documentLoading", false);
+            showMessage("documentMessage", "Enter the signer name in Step 1 first.", "error");
+            return;
+        }
+
+        const selectedTemplate = templateInfoById(template);
+
+        const finalName =
+            enteredName ||
+            `${signer} — ${selectedTemplate ? selectedTemplate.name : "Document"}`;
+
+        try {
+            const payload = await buildPayload(
+                "/api/documents/create",
+                "POST",
+                {
+                    template,
+                    signer,
+                    signature: signatureDataUrl,
+                    documentName: finalName
+                }
+            );
+
+            const data = await api(
+                "/api/documents/create",
+                jsonOptions("POST", payload)
+            );
+
+            const created = valueFrom(
+                data,
+                ["document", "document_record"],
+                null
+            );
+
+            const documentId = valueFrom(
+                created || data,
+                ["document_id", "id"],
+                ""
+            );
+
+            showMessage(
+                "documentMessage",
+                documentId
+                    ? `Document "${finalName}" created and saved.`
+                    : `Document "${finalName}" created and saved.`
+            );
+
+            $("documentName").value = "";
+
+            await refreshDocuments();
+
+            if (documentId) {
+                selectedDocumentId = documentId;
+                selectedDetectionDocumentId = documentId;
+            }
+
+            renderDocumentPicker();
+            renderDetectionDocumentPicker();
+
+        } catch (error) {
+            showMessage("documentMessage", error.message, "error");
+        } finally {
+            setLoading("documentLoading", false);
+        }
+    }
+
+
+    async function signDocument() {
+        clearMessage("signMessage");
+
+        if (!selectedPackageId) {
+            showMessage(
+                "signMessage",
+                "Select a saved QDS package first.",
+                "error"
+            );
+            return;
+        }
+
+        if (!selectedDocumentId) {
+            showMessage(
+                "signMessage",
+                "Select a saved document first.",
+                "error"
+            );
+            return;
+        }
+
+        setLoading("signLoading", true);
+
+        try {
+            const data = await api(
+                `/api/qds/packages/${encodeURIComponent(selectedPackageId)}/sign-document`,
+                jsonOptions("POST", {
+                    document_id: selectedDocumentId
+                })
+            );
+
+            showMessage(
+                "signMessage",
+                valueFrom(
+                    data,
+                    ["message", "status"],
+                    "Document successfully bound and QDS-signed."
+                )
+            );
+
+            await refreshPackages();
+            selectedAttackPackageId = selectedPackageId;
+            renderAttackPackagePicker();
+        } catch (error) {
+            showMessage("signMessage", error.message, "error");
+        } finally {
+            setLoading("signLoading", false);
+        }
+    }
+
+    async function verifyNormal() {
+        clearMessage("verificationMessage");
+
+        if (!selectedDetectionPackageId) {
+            showMessage(
+                "verificationMessage",
+                "Select a QDS package.",
+                "error"
+            );
+            return;
+        }
+
+        if (!selectedDetectionDocumentId) {
+            showMessage(
+                "verificationMessage",
+                "Select a document.",
+                "error"
+            );
+            return;
+        }
+
+        setLoading("verificationLoading", true);
+
+        try {
+            const data = await api(
+                "/api/detection/verify",
+                jsonOptions("POST", {
+                    package_id: selectedDetectionPackageId,
+                    document_id: selectedDetectionDocumentId
+                })
+            );
+
+            displayVerificationResult(data);
+
+            showMessage(
+                "verificationMessage",
+                valueFrom(
+                    data,
+                    ["message"],
+                    "Detection completed."
+                )
+            );
+
+        } catch (error) {
+            showMessage(
+                "verificationMessage",
+                error.message,
+                "error"
+            );
+            displayVerificationResult({
+                status: "ERROR",
+                result: "ERROR",
+                message: error.message
+            });
+        } finally {
+            setLoading("verificationLoading", false);
+        }
+    }
+
+    function isScalar(value) {
+        return (
+            typeof value === "string" ||
+            typeof value === "number" ||
+            typeof value === "boolean"
+        );
+    }
+
+    function cleanDecision(value) {
+        if (value === null || value === undefined || value === "") {
+            return "";
+        }
+
+        if (isScalar(value)) {
+            return String(value);
+        }
+
+        if (Array.isArray(value)) {
+            const parts = value
+                .map(item => cleanDecision(item))
+                .filter(Boolean);
+            return parts.join(", ");
+        }
+
+        if (typeof value === "object") {
+            const preferred = [
+                "status",
+                "decision",
+                "security_decision",
+                "result",
+                "value",
+                "message",
+                "reason",
+                "interpretation",
+                "explanation"
+            ];
+
+            for (const key of preferred) {
+                if (value[key] !== undefined && value[key] !== null && value[key] !== "") {
+                    const result = cleanDecision(value[key]);
+                    if (result) return result;
+                }
+            }
+
+            if (typeof value.valid === "boolean") {
+                return value.valid ? "VALID" : "INVALID";
+            }
+
+            if (typeof value.accepted === "boolean") {
+                return value.accepted ? "ACCEPTED" : "REJECTED";
+            }
+
+            if (typeof value.verified === "boolean") {
+                return value.verified ? "VERIFIED" : "NOT VERIFIED";
+            }
+
+            if (typeof value.match === "boolean") {
+                return value.match ? "MATCH" : "MISMATCH";
+            }
+        }
+
+        return "";
+    }
+
+    function findNestedValue(data, keys, maxDepth = 4) {
+        if (data === null || data === undefined || maxDepth < 0) {
+            return undefined;
+        }
+
+        if (typeof data !== "object") {
+            return undefined;
+        }
+
+        for (const key of keys) {
+            if (Object.prototype.hasOwnProperty.call(data, key)) {
+                const value = data[key];
+                if (value !== undefined && value !== null && value !== "") {
+                    return value;
+                }
+            }
+        }
+
+        const nestedKeys = [
+            "verification",
+            "verification_result",
+            "security",
+            "security_result",
+            "result",
+            "details",
+            "data"
+        ];
+
+        for (const key of nestedKeys) {
+            if (data[key] && typeof data[key] === "object") {
+                const nested = findNestedValue(data[key], keys, maxDepth - 1);
+                if (nested !== undefined) return nested;
+            }
+        }
+
+        return undefined;
+    }
+
+    function formatBinding(value) {
+        if (value === undefined || value === null || value === "") {
+            return "—";
+        }
+
+        if (isScalar(value)) {
+            return String(value);
+        }
+
+        if (typeof value === "object") {
+            if (typeof value.valid === "boolean") {
+                return value.valid ? "VALID" : "INVALID";
+            }
+            if (typeof value.integrity === "boolean") {
+                return value.integrity ? "INTACT" : "MODIFIED";
+            }
+            if (typeof value.match === "boolean") {
+                return value.match ? "MATCH" : "MISMATCH";
+            }
+            const preferred = cleanDecision(value);
+            if (preferred) return preferred;
+        }
+
+        return "AVAILABLE";
+    }
+
+    function formatExplanation(value) {
+        if (value === undefined || value === null || value === "") {
+            return "Detection completed.";
+        }
+
+        if (isScalar(value)) {
+            return String(value);
+        }
+
+        if (Array.isArray(value)) {
+            const parts = value
+                .map(item => formatExplanation(item))
+                .filter(Boolean);
+            return parts.join("\n");
+        }
+
+        if (typeof value === "object") {
+            const preferred = [
+                "explanation",
+                "message",
+                "reason",
+                "detail",
+                "interpretation",
+                "note"
+            ];
+
+            for (const key of preferred) {
+                if (value[key] !== undefined && value[key] !== null && value[key] !== "") {
+                    const result = formatExplanation(value[key]);
+                    if (result) return result;
+                }
+            }
+
+            const lines = [];
+            for (const [key, item] of Object.entries(value)) {
+                if (isScalar(item)) {
+                    lines.push(`${key.replaceAll("_", " ")}: ${item}`);
+                }
+            }
+            if (lines.length) return lines.join("\n");
+        }
+
+        return "Detection completed.";
+    }
+
+    function simpleAttackExplanation(data, status, binding) {
+        const attackType = String(
+            data?.scenario_type || data?.attack_type || ""
+        ).toUpperCase();
+
+        if (!attackType) {
+            if (binding === "VALID" && status !== "UNKNOWN") {
+                return "The selected document matches the document bound to the QDS package. Q-SENTRY completed protocol verification and returned the security result shown above.";
+            }
+            return "Q-SENTRY completed the verification. The result above shows the current security decision and document-binding state.";
+        }
+
+        if (attackType === "DOCUMENT_TAMPERING") {
+            return "The attacker changed information inside the document. The original document remains the trusted reference, while the attacked document contains the changed content. Q-SENTRY compares the attacked state with the expected signed state.";
+        }
+
+        if (attackType === "FORGERY") {
+            return "The document content can remain unchanged, but the QDS signature information has been altered. Q-SENTRY evaluates the signature condition separately from the visible document text.";
+        }
+
+        if (attackType === "IMPERSONATION") {
+            return "The attacker is using a different signer identity. The original signer is the trusted identity; the attacked case changes the signer context to test whether the verification process can detect the mismatch.";
+        }
+
+        if (attackType === "REPLAY") {
+            return "The attacker reuses previously valid QDS information in a new verification context. The visible document does not have to change because the attack is on how the signed information is reused.";
+        }
+
+        if (attackType === "UNAUTHORIZED_VERIFICATION") {
+            return "The attacker is trying to verify the document without the required authorization. The document can look completely normal; the security problem is the unauthorized verification request.";
+        }
+
+        if (attackType === "QUANTUM_CHANNEL_MANIPULATION") {
+            return "The document can remain unchanged while the quantum channel is intentionally disturbed before measurement. Q-SENTRY evaluates whether the measured behaviour moves away from the legitimate baseline.";
+        }
+
+        return "Q-SENTRY is evaluating a controlled attack condition. Compare the original and attacked document views to understand what changed.";
+    }
+
+    function displayVerificationResult(data) {
+        const rawStatus =
+            data?.status ??
+            data?.security_decision ??
+            data?.decision ??
+            data?.result ??
+            findNestedValue(
+                data,
+                ["status", "decision", "security_decision", "result"],
+                6
+            );
+
+        let status = cleanDecision(rawStatus);
+
+        if (!status) {
+            const validValue =
+                data?.valid ??
+                data?.verified ??
+                data?.accepted ??
+                findNestedValue(
+                    data,
+                    ["valid", "verified", "accepted"],
+                    6
+                );
+
+            if (typeof validValue === "boolean") {
+                status = validValue ? "VALID" : "INVALID";
+            }
+        }
+
+        if (!status) {
+            status = "UNKNOWN";
+        }
+
+        const bindingValue =
+            data?.binding_status ??
+            data?.document_binding_status ??
+            data?.binding ??
+            data?.integrity ??
+            findNestedValue(
+                data,
+                ["binding_status", "document_binding_status", "binding", "integrity"],
+                6
+            );
+
+        const binding = formatBinding(bindingValue);
+
+        let explanation = simpleAttackExplanation(
+            data,
+            status,
+            binding
+        );
+
+        const backendExplanation =
+            data?.explanation ??
+            data?.message ??
+            data?.detail ??
+            data?.interpretation ??
+            data?.reason ??
+            data?.note ??
+            findNestedValue(
+                data,
+                ["explanation", "message", "detail", "interpretation", "reason", "note"],
+                6
+            );
+
+        const backendText = formatExplanation(backendExplanation);
+
+        // Prefer our plain-language attack explanation so the result remains
+        // understandable even when the backend returns a technical message.
+        if (!String(data?.scenario_type || data?.attack_type || "").trim()) {
+            if (backendText && backendText !== "Detection completed.") {
+                explanation = `${explanation}\n\nBackend result: ${backendText}`;
+            }
+        }
+
+        $("verificationStatus").textContent = status;
+        $("verificationResultText").textContent = status;
+        $("verificationBindingText").textContent = binding;
+        $("verificationExplanation").textContent = explanation;
+    }
+
+    async function createAttack(type) {
+        clearMessage("attackMessage");
+        setLoading("attackLoading", true);
+
+        if (!selectedAttackPackageId) {
+            setLoading("attackLoading", false);
+            showMessage(
+                "attackMessage",
+                "Select the QDS package once in the Attack Lab before creating an attack case.",
+                "error"
+            );
+            return;
+        }
+
+        const selectedPackage = packages.find(
+            p => p.package_id === selectedAttackPackageId
+        );
+
+        if (!selectedPackage) {
+            setLoading("attackLoading", false);
+            showMessage(
+                "attackMessage",
+                "The selected attack QDS package is no longer available. Refresh the page.",
+                "error"
+            );
+            return;
+        }
+
+        if (!selectedPackage.document_id) {
+            setLoading("attackLoading", false);
+            showMessage(
+                "attackMessage",
+                "This QDS package is not bound to a document. Complete Step 3 — Bind & Sign first.",
+                "error"
+            );
+            return;
+        }
+
+        const routes = {
+            tampering: "/api/attacks/document-tampering",
+            forgery: "/api/attacks/forgery",
+            impersonation: "/api/attacks/impersonation",
+            replay: "/api/attacks/replay",
+            unauthorized: "/api/attacks/unauthorized-verification",
+            channel: "/api/attacks/quantum-channel"
+        };
+
+        const route = routes[type];
+
+        if (!route) {
+            setLoading("attackLoading", false);
+            showMessage(
+                "attackMessage",
+                "Unknown attack scenario.",
+                "error"
+            );
+            return;
+        }
+
+        let body = {
+            package_id: selectedAttackPackageId
+        };
+
+        if (type === "tampering") {
+            const selectedDocument = documents.find(
+                d => d.document_id === selectedPackage.document_id
+            );
+
+            if (!selectedDocument) {
+                setLoading("attackLoading", false);
+                showMessage(
+                    "attackMessage",
+                    "The document bound to this QDS package is no longer available. Refresh the page.",
+                    "error"
+                );
+                return;
+            }
+
+            const signerText = (selectedDocument.signer_name || selectedPackage.signer_id || "Signer").trim();
+
+            body.document_id = selectedPackage.document_id;
+            body.search_text = signerText;
+            body.replacement_text = `${signerText} [TAMPERED]`;
+        }
+
+        if (type === "forgery") {
+            body.forged_signature_data = {
+                attack_type: "FORGERY",
+                forged_by: "ATTACKER",
+                original_package_id: selectedAttackPackageId,
+                forged_signature: "FORGED_SIGNATURE_DATA"
+            };
+        }
+
+        if (type === "impersonation") {
+            body.impersonated_signer_id = "ATTACKER";
+        }
+
+        if (type === "replay") {
+            body.replay_context_id = `REPLAY-CONTEXT-${Date.now()}`;
+        }
+
+        if (type === "unauthorized") {
+            body.verifier_id = "UNAUTHORIZED-VERIFIER";
+            body.authorized = false;
+        }
+
+        if (type === "channel") {
+            body.manipulation = "PHASE_FLIP";
+            body.probability = 0.10;
+        }
+
+        try {
+            const data = await api(
+                route,
+                jsonOptions("POST", body)
+            );
+
+            const scenarioId = valueFrom(
+                data,
+                ["scenario_id", "attack_case_id", "id"],
+                ""
+            );
+
+            latestAttackCaseId = scenarioId || null;
+            latestAttackCase = data;
+
+            $("latestAttackCase").classList.remove("hidden");
+
+            $("latestAttackText").textContent =
+                (scenarioId ? `Case ID: ${scenarioId}. ` : "") +
+                valueFrom(
+                    data,
+                    ["message", "detection_note", "status"],
+                    "Attack case created."
+                );
+
+            showMessage(
+                "attackMessage",
+                scenarioId
+                    ? `Attack case ${scenarioId} created.`
+                    : "Attack case created."
+            );
+
+            await refreshAttackCases();
+
+        } catch (error) {
+            showMessage(
+                "attackMessage",
+                error.message,
+                "error"
+            );
+        } finally {
+            setLoading("attackLoading", false);
+        }
+    }
+
+    async function deleteAttackCase(scenarioId) {
+        const confirmed = window.confirm(
+            `Delete attack case ${scenarioId}? This cannot be undone.`
+        );
+
+        if (!confirmed) return;
+
+        try {
+            // Prefer the POST alias because some local browser/proxy setups
+            // handle DELETE less consistently. Fall back to DELETE.
+            try {
+                await api(
+                    `/api/attack-cases/${encodeURIComponent(scenarioId)}/delete`,
+                    { method: "POST" }
+                );
+            } catch (postError) {
+                await api(
+                    `/api/attack-cases/${encodeURIComponent(scenarioId)}`,
+                    { method: "DELETE" }
+                );
+            }
+
+            if (latestAttackCaseId === scenarioId) {
+                latestAttackCaseId = null;
+                latestAttackCase = null;
+                $("latestAttackCase").classList.add("hidden");
+            }
+
+            await refreshAttackCases();
+            showMessage(
+                "attackMessage",
+                `Attack case ${scenarioId} deleted successfully.`
+            );
+        } catch (error) {
+            showMessage(
+                "attackMessage",
+                error.message,
+                "error"
+            );
+        }
+    }
+
+    async function viewAttackDocument(scenarioId) {
+        try {
+            window.open(
+                `/api/attack-cases/${encodeURIComponent(scenarioId)}/document`,
+                "_blank"
+            );
+        } catch (error) {
+            showMessage("attackMessage", error.message, "error");
+        }
+    }
+
+    async function detectAttackCase(scenarioId) {
+        clearMessage("attackMessage");
+
+        try {
+            const data = await api(
+                `/api/attack-cases/${encodeURIComponent(scenarioId)}/verify`,
+                { method: "POST" }
+            );
+
+            displayVerificationResult(data);
+
+            showMessage(
+                "attackMessage",
+                `Detection completed for attack case ${scenarioId}.`
+            );
+
+            document
+                .querySelector(".section:nth-of-type(2)")
+                ?.scrollIntoView({ behavior: "smooth" });
+
+        } catch (error) {
+            showMessage(
+                "attackMessage",
+                error.message,
+                "error"
+            );
+        }
+    }
+
+    async function runSimulation() {
+        clearMessage("simulationMessage");
+        setLoading("simulationLoading", true);
+
+        const scenario = $("simScenario").value;
+
+        const shots = Math.max(
+            100,
+            parseInt($("simShots").value, 10) || 1000
+        );
+
+        const noiseProbability = Math.min(
+            1,
+            Math.max(
+                0,
+                parseFloat($("simNoiseProbability").value) || 0
+            )
+        );
+
+        const threshold = Math.min(
+            1,
+            Math.max(
+                0,
+                parseFloat($("simThreshold").value) || 0
+            )
+        );
+
+        try {
+            const data = await api(
+                "/api/simulation/run",
+                jsonOptions("POST", {
+                    scenario,
+                    basis: $("simBasis").value,
+                    attack: $("simAttack").value,
+                    noise: $("simNoise").value,
+                    noise_probability: noiseProbability,
+                    shots,
+                    threshold,
+                    message_bit: 0,
+                    seed: 42
+                })
+            );
+
+            displaySimulation(data);
+
+            showMessage(
+                "simulationMessage",
+                "Simulation completed."
+            );
+
+        } catch (error) {
+            showMessage(
+                "simulationMessage",
+                error.message,
+                "error"
+            );
+        } finally {
+            setLoading("simulationLoading", false);
+        }
+    }
+
+    function displaySimulation(data) {
+        const result = data.result || data;
+        const simulation = data.simulation || {};
+        const comparison = data.comparison || {};
+
+        const normal =
+            result.normal ||
+            result.normal_with_noise ||
+            comparison.normal ||
+            {};
+
+        const attack =
+            result.attack ||
+            result.attack_with_noise ||
+            comparison.attack ||
+            {};
+
+        const normalDetection = normal.detection || normal;
+        const attackDetection = attack.detection || attack;
+
+        const normalTvd = toNumber(
+            valueFrom(normalDetection, ["total_variation_distance", "tvd"], NaN)
+        );
+
+        const attackTvd = toNumber(
+            valueFrom(attackDetection, ["total_variation_distance", "tvd"], NaN)
+        );
+
+        const normalStatus = valueFrom(
+            normalDetection,
+            ["status", "decision"],
+            "—"
+        );
+
+        const attackStatus = valueFrom(
+            attackDetection,
+            ["status", "decision"],
+            "—"
+        );
+
+        $("simNormalTvd").textContent =
+            Number.isFinite(normalTvd) ? normalTvd.toFixed(3) : "—";
+
+        $("simAttackTvd").textContent =
+            Number.isFinite(attackTvd) ? attackTvd.toFixed(3) : "—";
+
+        setBadge("simNormalStatus", normalStatus);
+        setBadge("simAttackStatus", attackStatus);
+
+        const normalObs =
+            normal.observed_probabilities ||
+            data.normal?.observed_probabilities ||
+            {};
+
+        const attackObs =
+            attack.observed_probabilities ||
+            data.attack?.observed_probabilities ||
+            {};
+
+        const normalPlus = toNumber(normalObs["+"] ?? 0, 0) * 100;
+        const normalMinus = toNumber(normalObs["-"] ?? 0, 0) * 100;
+        const attackPlus = toNumber(attackObs["+"] ?? 0, 0) * 100;
+        const attackMinus = toNumber(attackObs["-"] ?? 0, 0) * 100;
+
+        setBar("simNormalPlusBar", "simNormalPlusText", normalPlus);
+        setBar("simNormalMinusBar", "simNormalMinusText", normalMinus);
+        setBar("simAttackPlusBar", "simAttackPlusText", attackPlus);
+        setBar("simAttackMinusBar", "simAttackMinusText", attackMinus);
+
+        const threshold =
+            valueFrom(
+                data,
+                ["threshold", "candidate_threshold"],
+                $("simThreshold").value
+            );
+
+        $("simEvidenceThreshold").textContent = threshold;
+        $("simEvidenceNormal").textContent = normalStatus;
+        $("simEvidenceAttack").textContent = attackStatus;
+
+        const interpretation =
+            valueFrom(
+                data,
+                ["interpretation", "message"],
+                "An anomalous result indicates statistical deviation from expected behaviour and does not automatically prove a specific attack."
+            );
+
+        $("simInterpretation").textContent = interpretation;
+
+        $("simAttackTitle").textContent =
+            scenarioLabel($("simScenario").value);
+    }
+
+    function scenarioLabel(scenario) {
+        const labels = {
+            NORMAL: "Normal / Reference",
+            NOISE: "Controlled Noise",
+            ATTACK: "Defined Attack",
+            ATTACK_WITH_NOISE: "Attack + Noise"
+        };
+        return labels[scenario] || scenario;
+    }
+
+    function toNumber(value, fallback = 0) {
+        const n = Number(value);
+        return Number.isFinite(n) ? n : fallback;
+    }
+
+    function setBadge(id, status) {
+        const el = $(id);
+        const text = String(status ?? "—");
+        el.textContent = text;
+        el.className = "badge " + (
+            text.includes("ANOMALOUS") ||
+            text.includes("INVALID") ||
+            text.includes("ATTACK")
+                ? "anomalous"
+                : text.includes("WITHIN") ||
+                  text.includes("VALID") ||
+                  text.includes("NORMAL")
+                    ? "normal"
+                    : "neutral"
+        );
+    }
+
+    function setBar(barId, textId, percent) {
+        const safe = Math.min(100, Math.max(0, Number(percent) || 0));
+        $(barId).style.width = safe + "%";
+        $(textId).textContent = safe.toFixed(1) + "%";
+    }
+
+    /* =========================================================
+       SIGNATURE PAD
+       ========================================================= */
+
+    function initSignaturePad() {
+        const canvas = $("signatureCanvas");
+        const clearButton = $("clearSignatureBtn");
+        const status = $("signatureStatus");
+
+        if (!canvas || !clearButton || !status) return;
+
+        const context = canvas.getContext("2d");
+        let drawing = false;
+        let lastX = 0;
+        let lastY = 0;
+
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            const ratio = Math.max(1, window.devicePixelRatio || 1);
+
+            const old = signatureDataUrl;
+            canvas.width = Math.floor(rect.width * ratio);
+            canvas.height = Math.floor(rect.height * ratio);
+
+            context.setTransform(ratio, 0, 0, ratio, 0, 0);
+            context.clearRect(0, 0, rect.width, rect.height);
+
+            context.lineCap = "round";
+            context.lineJoin = "round";
+            context.lineWidth = 2.2;
+            context.strokeStyle = "#172033";
+
+            if (old) {
+                const image = new Image();
+                image.onload = () => {
+                    context.drawImage(image, 0, 0, rect.width, rect.height);
+                };
+                image.src = old;
+            }
+        }
+
+        function pointFromEvent(event) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: event.clientX - rect.left,
+                y: event.clientY - rect.top
+            };
+        }
+
+        function begin(event) {
+            drawing = true;
+            canvas.setPointerCapture?.(event.pointerId);
+            const point = pointFromEvent(event);
+            lastX = point.x;
+            lastY = point.y;
+
+            context.beginPath();
+            context.moveTo(lastX, lastY);
+            context.lineTo(lastX + 0.01, lastY + 0.01);
+            context.stroke();
+        }
+
+        function draw(event) {
+            if (!drawing) return;
+
+            const point = pointFromEvent(event);
+
+            context.beginPath();
+            context.moveTo(lastX, lastY);
+            context.lineTo(point.x, point.y);
+            context.stroke();
+
+            lastX = point.x;
+            lastY = point.y;
+        }
+
+        function end() {
+            if (!drawing) return;
+            drawing = false;
+            saveSignature();
+        }
+
+        function saveSignature() {
+            signatureDataUrl = canvas.toDataURL("image/png");
+            status.textContent = "Signature captured and ready.";
+            status.className = "signature-status ready";
+        }
+
+        function clearSignature() {
+            const rect = canvas.getBoundingClientRect();
+            context.clearRect(0, 0, rect.width, rect.height);
+            signatureDataUrl = null;
+            status.textContent = "Draw your signature using mouse, touch, or stylus.";
+            status.className = "signature-status";
+        }
+
+        canvas.addEventListener("pointerdown", begin);
+        canvas.addEventListener("pointermove", draw);
+        canvas.addEventListener("pointerup", end);
+        canvas.addEventListener("pointercancel", end);
+        canvas.addEventListener("pointerleave", () => {
+            if (drawing) saveSignature();
+        });
+
+        clearButton.addEventListener("click", clearSignature);
+        window.addEventListener("resize", resizeCanvas);
+
+        resizeCanvas();
+    }
+
+    // Button bindings
+    $("createPackageBtn").addEventListener("click", createPackage);
+    $("createDocumentBtn").addEventListener("click", createDocument);
+    $("signDocumentBtn").addEventListener("click", signDocument);
+    $("verifyBtn").addEventListener("click", verifyNormal);
+    $("runSimulationBtn").addEventListener("click", runSimulation);
+
+    $("attackPackageSelector").addEventListener("change", () => {
+        selectedAttackPackageId = $("attackPackageSelector").value || null;
+        renderAttackPackagePicker();
+        clearMessage("attackMessage");
+    });
+
+    document.querySelectorAll(".attack-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            createAttack(btn.dataset.type);
+        });
+    });
+
+    $("viewAttackDocumentBtn").addEventListener("click", () => {
+        if (latestAttackCaseId) {
+            viewAttackDocument(latestAttackCaseId);
+        }
+    });
+
+    $("detectAttackBtn").addEventListener("click", () => {
+        if (latestAttackCaseId) {
+            detectAttackCase(latestAttackCaseId);
+        }
+    });
+
+    $("deleteLatestAttackBtn").addEventListener("click", async () => {
+        if (latestAttackCaseId) {
+            await deleteAttackCase(latestAttackCaseId);
+        }
+    });
+
+    initSignaturePad();
+
+    // Initial load
+    (async function init() {
+        await Promise.all([
+            refreshProtocols(),
+            refreshTemplates(),
+            refreshDocuments(),
+            refreshPackages(),
+            refreshAttackCases()
+        ]);
+    })();
+</script>
+
+</body>
+</html>

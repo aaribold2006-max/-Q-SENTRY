@@ -1,0 +1,41 @@
+{
+    "package_id": "QDS-39BADB33DA",
+    "protocol_id": "TQDS-PROTOTYPE-01",
+    "signer_id": "karthi",
+    "document_id": "DOC-09725FE4E5",
+    "package_name": "karthi coach certificate",
+    "document_binding": {
+        "document_id": "DOC-09725FE4E5",
+        "binding_algorithm": "SHA256",
+        "document_digest": "40391ba932275efad0ae06b747f16da788efca7aa9632aaa6e0b9d2d87993ca5",
+        "document_size_bytes": 31833,
+        "created_at": "2026-09-21T10:44:37.833555+00:00"
+    },
+    "signature_data": {
+        "protocol_id": "TQDS-PROTOTYPE-01",
+        "signer_id": "karthi",
+        "message_digest": "5ed2bba83d33838d68014f6241f58e372b1ee46539db716afeebd6561e1c8805",
+        "signature_digest": "71e28af1794978768c6ce2f06725f68aebb03da69f20e2683f72190cb0d7dc5c",
+        "state_labels": [
+            "|1>",
+            "|1>",
+            "|+>",
+            "|+>",
+            "|+>",
+            "|+i>",
+            "|->",
+            "|1>"
+        ]
+    },
+    "verification_data": {
+        "binding_type": "PROTOTYPE_MESSAGE_BINDING",
+        "measurement_framework": "Pauli eigenstate / projective measurement prototype",
+        "teleportation_framework": "Bell/EPR entanglement + teleportation prototype"
+    },
+    "created_at": "2026-09-20T15:06:33.512811+00:00",
+    "version": "1.0",
+    "metadata": {
+        "stage": "DOCUMENT_SIGNED",
+        "initialization": {}
+    }
+}
